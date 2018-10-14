@@ -25,8 +25,10 @@ SECRET_KEY = 'd_ccl_bme4=w2+--(d*1-@b*nwgs+fhf+^fx#dl=@d9&sj$(!1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["eventry-dev.us-west-2.elasticbeanstalk.com"]
+if DEBUG:
+    ALLOWED_HOSTS.append('localhost')
+    ALLOWED_HOSTS.append('127.0.0.1')
 
 # Application definition
 

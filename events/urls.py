@@ -1,4 +1,4 @@
-from events.views import EventViewSet, api_root
+from events.views import EventViewSet
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.urls import path
 
@@ -6,6 +6,7 @@ event_list = EventViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
+
 event_detail = EventViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
@@ -15,5 +16,5 @@ event_detail = EventViewSet.as_view({
 
 urlpatterns = format_suffix_patterns([
     path('', event_list, name='event-list'),
-    path('<int:pk>', event_detail, name='event-detail'),
+    path('<int:pk>/', event_detail, name='event-detail'),
 ])

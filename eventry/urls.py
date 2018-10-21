@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.conf.urls import url
+#from django.conf.urls import url
+
+from authapp.views import FacebookLogin
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls'))
-
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
 ]

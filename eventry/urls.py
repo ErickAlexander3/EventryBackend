@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import include, path
 #from django.conf.urls import url
 
-from authapp.views import FacebookLogin
+from authapp.views import FacebookLogin, privacy_policy
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+	path('privacy_policy/', privacy_policy, name='privacy_policy'),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),

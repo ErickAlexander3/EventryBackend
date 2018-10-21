@@ -4,3 +4,7 @@ from rest_auth.registration.views import SocialLoginView
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
+
+def privacy_policy(request):	
+	return render(request, 'privacy_policy.html')

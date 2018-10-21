@@ -13,7 +13,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_location',
             'event_participants',
             'event_start_time',
-            'event_type',
+            #'event_type',
             'event_end_time',
             'event_price',
             'event_qrenabled',

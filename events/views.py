@@ -14,8 +14,6 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 @api_view(['GET'])
 def api_root(request, format=None):

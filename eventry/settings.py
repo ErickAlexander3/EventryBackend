@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     #actual apps
-    'events',
+    'events.apps.EventsConfig',
 
 ]
 

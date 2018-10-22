@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 #from django.conf.urls import url
 
-from authapp.views import FacebookLogin, privacy_policy
+from authapp.views import FacebookLogin, GoogleLogin, privacy_policy
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -26,5 +26,6 @@ urlpatterns = [
 	path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
+    path('rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
 	path('events/', include('events.urls')),
 ]

@@ -6,9 +6,9 @@ from rest_auth.registration.views import SocialLoginView
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
-
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
 
-def privacy_policy(request):	
-	return render(request, 'privacy_policy.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')

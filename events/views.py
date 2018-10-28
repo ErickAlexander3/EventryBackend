@@ -13,10 +13,3 @@ class EventViewSet(viewsets.ModelViewSet):
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'events': reverse('event-list', request=request, format=format)
-    })

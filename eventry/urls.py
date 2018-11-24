@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 #from django.conf.urls import url
+from rest_framework.routers import DefaultRouter
 
 from authapp.views import FacebookLogin, GoogleLogin, privacy_policy
+from events import views
+
+router = DefaultRouter()
+router.register(r'events', views.EventViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -27,5 +32,6 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
-	path('events/', include('events.urls')),
+	#path('events/', include('events.urls')),
+    path('', include(router.urls)),
 ]

@@ -14,6 +14,7 @@ event_detail = EventViewSet.as_view({
     'delete': 'destroy'
 })
 
+
 urlpatterns = format_suffix_patterns([
     path('', event_list, name='event-list'),
     path('<int:pk>/', event_detail, name='event-detail'),

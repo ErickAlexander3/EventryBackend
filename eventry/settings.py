@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites', #used for allauth
+    'django.contrib.gis',
     #extra_apps
     'rest_framework',
     'rest_framework.authtoken',
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'eventry.wsgi.application'
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
@@ -103,11 +104,17 @@ if 'RDS_DB_NAME' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            "NAME": "erickvelasquez",
+            "USER": "erickvelasquez",
+            "PASSWORD": "",
+            "HOST": "localhost",
+            "PORT": "",
     }
 }
 
+#Geodjango stuff with Spatialite (only for local development)
+SPATIALITE_LIBRARY_PATH='/usr/local/lib/mod_spatialite.dylib'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

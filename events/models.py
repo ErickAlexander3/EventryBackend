@@ -9,7 +9,7 @@ class Event(models.Model):
     event_name = models.CharField(max_length=100, default='event')
     event_description = models.CharField(max_length=100, blank=True, default='New event')
     event_address = models.CharField(max_length=50, null=True, blank=True)
-    event_location = models.PointField(null=True)
+    event_point_location = models.PointField(null=True)
     event_participants = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)]) #NOTE: the redundant validator was just added for compatibility with SQLite
     #event_type = ArrayField(models.CharField(max_length=20, null=True, blank=True), size=15, null=True)
     event_start_time = models.DateTimeField('start date and time', null=True)

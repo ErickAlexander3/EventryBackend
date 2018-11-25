@@ -110,3 +110,6 @@ venv.bak/
 
 #random Mac OS stuff
 .DS_Store
+
+#ignore www because that is local
+www

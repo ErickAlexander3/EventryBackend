@@ -4,6 +4,21 @@ from django.core.validators import MinValueValidator
 from django.contrib.postgres.fields import ArrayField
 from enum import Enum
 
+import os
+from uuid import uuid4
+
+def path_and_rename(instance, filename):
+    upload_to = 'event_pics'
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(upload_to, filename)
+
 
 # Create your models here.
 class Event(models.Model):
@@ -29,17 +44,25 @@ class Event(models.Model):
     event_max_capacity = models.PositiveIntegerField(default=100) #NOTE: the redundant validator was just added for compatibility with SQLite
     event_type = ArrayField(
         models.CharField(choices=EVENT_TYPE, max_length=2, blank=True, default="MS"),
-        default=list
+        default=list,
+        null=True
     )
     event_start_time = models.DateTimeField('start date and time', null=True)
     event_end_time = models.DateTimeField('start date and time', null=True)
     event_price = models.DecimalField(max_digits=7, decimal_places=2, default='0.00', validators=[MinValueValidator(0.0)])
-    event_pic = models.ImageField(upload_to='event_pics/', default='event_picts/None/no-img.jpg')
+    #event_pic = models.ImageField(upload_to='event_pics/', default='event_picts/None/no-img.jpg')
 
 
 
     class Meta:
         ordering = ('creation_date',)
+
+
+class EventImage(models.Model):
+        event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_media")
+        image = models.ImageField(upload_to=path_and_rename)
+
+
 
     
 

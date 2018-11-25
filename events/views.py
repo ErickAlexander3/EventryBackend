@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from events.models import Event
 
+import pdb
 
 class EventViewSet(viewsets.ModelViewSet):
     """
@@ -20,7 +21,11 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(host=self.request.user)
-
+        '''
+    def create(self, request, *args, **kwargs):
+        pdb.set_trace()
+        return super(EventViewSet, self).create(request, *args, **kwargs)
+        '''
     '''
         Getters
     '''

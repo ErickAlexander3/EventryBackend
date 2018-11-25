@@ -21,6 +21,9 @@ from rest_framework.routers import DefaultRouter
 from authapp.views import FacebookLogin, GoogleLogin, privacy_policy#, UserViewSet
 from events.views import EventViewSet
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = DefaultRouter()
 router.register(r'events', EventViewSet)
 #router.register(r'users', UserViewSet)
@@ -35,4 +38,4 @@ urlpatterns = [
     path('rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
 	#path('events/', include('events.urls')),
     path('', include(router.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

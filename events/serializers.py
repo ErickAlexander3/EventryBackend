@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from events.models import Event
 from drf_extra_fields.geo_fields import PointField
+from rest_framework.fields import ListField
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     host = serializers.ReadOnlyField(source='host.username')
     event_point_location = PointField(required=False)
+    event_type = ListField()
 
     class Meta:
         model = Event
@@ -17,6 +19,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_point_location',
             'event_address',
             'event_max_capacity',
+            'event_type',
             'event_start_time',
             #'event_type',
             'event_end_time',

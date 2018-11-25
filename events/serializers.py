@@ -24,6 +24,5 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             #'event_type',
             'event_end_time',
             'event_price',
-            'event_qrenabled',
             'event_pic',
         )

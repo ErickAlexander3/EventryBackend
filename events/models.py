@@ -34,7 +34,6 @@ class Event(models.Model):
     event_start_time = models.DateTimeField('start date and time', null=True)
     event_end_time = models.DateTimeField('start date and time', null=True)
     event_price = models.DecimalField(max_digits=7, decimal_places=2, default='0.00', validators=[MinValueValidator(0.0)])
-    event_qrenabled = models.BooleanField(default=False)
     event_pic = models.ImageField(upload_to='event_pics/', default='event_picts/None/no-img.jpg')
 
 

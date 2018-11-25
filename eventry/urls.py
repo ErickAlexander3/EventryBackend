@@ -18,11 +18,12 @@ from django.urls import include, path
 #from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 
-from authapp.views import FacebookLogin, GoogleLogin, privacy_policy
-from events import views
+from authapp.views import FacebookLogin, GoogleLogin, privacy_policy#, UserViewSet
+from events.views import EventViewSet
 
 router = DefaultRouter()
-router.register(r'events', views.EventViewSet)
+router.register(r'events', EventViewSet)
+#router.register(r'users', UserViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),

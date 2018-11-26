@@ -18,7 +18,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     event_point_location = PointField(required=False)
     event_type = ListField(required=False)
     event_media = EventImageSerializer(many=True, read_only=True) #
-
+    event_start_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
+    event_end_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     class Meta:
         model = Event
         fields = (
@@ -40,8 +41,12 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
 
 
     def create(self, validated_data):
+        #create event
         event = Event.objects.create(**validated_data)
-        for image_data in self.context["request"].data.getlist("event_media"):
-            eventImage = EventImage.objects.create(event=event)
-            eventImage.image.save(image_data.name, image_data)
+
+        #if images added, do the bindings
+        if "event_media" in self.context["request"].data:
+            for image_data in self.context["request"].data.getlist("event_media"):
+                eventImage = EventImage.objects.create(event=event)
+                eventImage.image.save(image_data.name, image_data)
         return event

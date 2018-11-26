@@ -40,3 +40,24 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         #pdb.set_trace()
         serializer = self.get_serializer(users_attending_event, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def update_profile_pic(self, request, pk=None):
+        user = self.get_object()
+
+        #if images added, do the bindings
+        if request.user.id != user.id:
+            return Response("can't change someone else's profile pic",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        #if images added, do the bindings
+        if "profile_pic" not in request.data:
+            return Response('no image uploaded',
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        image_data = request.data.getlist("profile_pic")[0]
+        user.user_profile.profile_pic = image_data
+        user.user_profile.save()
+        pdb.set_trace()
+        return Response({'status': 'profile pic updated'})
+

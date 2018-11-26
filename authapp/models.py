@@ -4,6 +4,9 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 
+import os
+from uuid import uuid4
+
 def path_and_rename(instance, filename):
     upload_to = 'profile_pics'
     ext = filename.split('.')[-1]

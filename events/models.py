@@ -50,12 +50,13 @@ class Event(models.Model):
     event_start_time = models.DateTimeField('start date and time', null=True)
     event_end_time = models.DateTimeField('start date and time', null=True)
     event_price = models.DecimalField(max_digits=7, decimal_places=2, default='0.00', validators=[MinValueValidator(0.0)])
+    room_id = models.CharField(max_length=150, null=True)
     #event_pic = models.ImageField(upload_to='event_pics/', default='event_picts/None/no-img.jpg')
 
 
 
     class Meta:
-        ordering = ('creation_date',)
+        ordering = ('-creation_date',)
 
 
 class EventImage(models.Model):

@@ -20,6 +20,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     event_media = EventImageSerializer(many=True, read_only=True) #
     event_start_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     event_end_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
+    room_id = serializers.ReadOnlyField()
+
     class Meta:
         model = Event
         fields = (
@@ -37,6 +39,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_end_time',
             'event_price',
             'event_media',
+            'room_id'
         )
 
 

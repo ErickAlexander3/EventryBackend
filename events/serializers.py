@@ -21,6 +21,12 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     room_id = serializers.ReadOnlyField()
     distance = serializers.ReadOnlyField(source='distance.km')
     rank = serializers.ReadOnlyField()
+    number_of_registered = serializers.ReadOnlyField(source='registered_users.count')
+    number_of_attending = serializers.ReadOnlyField(source='attending_users.count')
+    is_hosting = serializers.SerializerMethodField()
+    is_registered = serializers.SerializerMethodField()
+    is_attending = serializers.SerializerMethodField()
+    is_favourite = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -32,17 +38,34 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'creation_date',
             'event_point_location',
             'event_address',
+            'number_of_registered',
+            'number_of_attending',
             'event_max_capacity',
             'event_type',
             'event_start_time',
-            #'event_type',
             'event_end_time',
             'event_price',
             'event_media',
             'room_id',
             'distance',
             'rank',
+            'is_hosting',
+            'is_attending',
+            'is_registered',
+            'is_favourite'
         )
+
+    def get_is_hosting(self, obj):
+        return self.context["request"].user.id == obj.host.id
+
+    def get_is_registered(self, obj):
+        return obj.registered_users.filter(id=self.context["request"].user.id).exists()
+
+    def get_is_attending(self, obj):
+        return obj.attending_users.filter(id=self.context["request"].user.id).exists()
+
+    def get_is_favourite(self, obj):
+        return obj.favourited_users.filter(id=self.context["request"].user.id).exists()
 
     '''
     def create(self, validated_data):

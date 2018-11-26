@@ -9,7 +9,7 @@ import pdb
 
 from django.contrib.auth.models import User
 from events.models import Event
-
+from .models import UserProfile
 
 
 
@@ -17,7 +17,7 @@ from events.models import Event
 def post_user_creation_setup(sender, instance, created, **kwargs):
     if created:
         #create the user profile (TODO)
-        #Profile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance)
 
 
         #create a JWT for pusher

@@ -41,7 +41,7 @@ class EventViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(event_end_time__gt=datetime.utcnow())
 
         if 'search' in self.request.query_params:
-            search_vector = SearchVector('event_name', weight='A') + SearchVector('event_description', weight='B') + SearchVector('event_address', weight='C')
+            search_vector = SearchVector('event_name', weight='A') + SearchVector('event_description', weight='A') + SearchVector('event_address', weight='B')
             search_query = SearchQuery(self.request.query_params['search'])
 
             queryset = queryset.annotate(rank=SearchRank(search_vector, search_query)).filter(rank__gte=0.25).order_by('-rank')
@@ -52,7 +52,7 @@ class EventViewSet(viewsets.ModelViewSet):
             ref_location = Point(float(self.request.query_params['lon']), float(self.request.query_params['lat']))
                 
             queryset = queryset.filter(
-                event_point_location__distance_lt=(ref_location, D(km=5000000000000000000))).annotate(
+                event_point_location__distance_lt=(ref_location, D(km=500))).annotate(
                 distance=Distance('event_point_location', ref_location)).order_by(
                 'distance')
 
@@ -61,10 +61,6 @@ class EventViewSet(viewsets.ModelViewSet):
 
     '''
         Getters
-    '''
-
-    '''
-        Override list view to include location-based search and string-based search
     '''
 
     @action(detail=False)

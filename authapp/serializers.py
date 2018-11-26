@@ -2,33 +2,12 @@
 from events.models import Event
 from drf_extra_fields.geo_fields import PointField
 from rest_framework.fields import ListField
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    host = serializers.ReadOnlyField(source='host.username')
-    event_point_location = PointField(required=False)
-    event_type = ListField()
-
-    class Meta:
-        model = Event
-        fields = (
-            'host',
-            'event_name',
-            'id',
-            'event_description',
-            'creation_date',
-            'event_point_location',
-            'event_address',
-            'event_max_capacity',
-            'event_type',
-            'event_start_time',
-            #'event_type',
-            'event_end_time',
-            'event_price',
-            'event_pic',
-        )
 '''
+
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
+
+from django.contrib.auth.models import User
 
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
@@ -43,3 +22,24 @@ class CustomRegisterSerializer(RegisterSerializer):
             'first_name': self.validated_data.get('first_name', ''),
             'last_name': self.validated_data.get('last_name', '')
         }
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    profile_pic = serializers.ImageField(source='user_profile.profile_pic')
+    number_of_attending_events = serializers.IntegerField(source='events_attended.count', read_only=True)
+    number_of_hosting_events = serializers.IntegerField(source='events_hosting.count', read_only=True)
+    bio = serializers.ReadOnlyField(source='user_profile.bio')
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'profile_pic',
+            'bio',
+            'number_of_attending_events',
+            'number_of_hosting_events',
+        )

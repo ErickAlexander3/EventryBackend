@@ -41,7 +41,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_media',
             'room_id',
             'distance',
-            'rank'
+            'rank',
+            'event_pic'
         )
 
 

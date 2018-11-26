@@ -1,5 +1,4 @@
 '''
-from rest_framework import serializers
 from events.models import Event
 from drf_extra_fields.geo_fields import PointField
 from rest_framework.fields import ListField

@@ -19,7 +19,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     event_start_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     event_end_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     room_id = serializers.ReadOnlyField()
-    distance = serializers.ReadOnlyField()
+    distance = serializers.ReadOnlyField(source='distance.km')
+    rank = serializers.ReadOnlyField()
 
     class Meta:
         model = Event
@@ -39,7 +40,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_price',
             'event_media',
             'room_id',
-            'distance'
+            'distance',
+            'rank'
         )
 
 

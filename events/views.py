@@ -14,6 +14,11 @@ from events.models import Event
 import pdb
 import json
 
+from datetime import datetime
+
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import Q
+
 class EventViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -30,13 +35,25 @@ class EventViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Event.objects.all()
 
-        return queryset
+        if 'not_expired' in self.request.query_params:
+            queryset = queryset.filter(event_end_time__gt=datetime.utcnow())
 
-        ref_location = Point(49.267941, -123.247360)
-            
-        new_queryset = queryset.filter(event_point_location__distance_lt=(ref_location, D(km=2000000000))).annotate(distance=Distance('event_point_location', ref_location)).order_by('distance')
+        if 'search' in self.request.query_params:
+            search_vector = SearchVector('event_name', weight='A') + SearchVector('event_description', weight='B') + SearchVector('event_address', weight='C')
+            search_query = SearchQuery(self.request.query_params['search'])
 
-        pdb.set_trace()
+            queryset = queryset.annotate(rank=SearchRank(search_vector, search_query)).filter(rank__gte=0.25).order_by('-rank')
+
+        if 'lon' in self.request.query_params and 'lat' in self.request.query_params:
+
+            #pdb.set_trace()
+            ref_location = Point(float(self.request.query_params['lon']), float(self.request.query_params['lat']))
+                
+            queryset = queryset.filter(
+                event_point_location__distance_lt=(ref_location, D(km=5000000000000000000))).annotate(
+                distance=Distance('event_point_location', ref_location)).order_by(
+                'distance')
+
 
         return queryset
 
@@ -60,11 +77,23 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(favourited_events, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def is_favourite(self, request, pk=None):
+        event_to_check = self.get_object()
+        is_favourite = event_to_check.favourited_users.filter(id=request.user.id).exists()
+        return Response({'is_favourite': is_favourite} )
+
     @action(detail=False)
     def registered(self, request):
         registered_events = Event.objects.filter(registered_users__id=request.user.pk)
         serializer = self.get_serializer(registered_events, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def is_registered(self, request, pk=None):
+        event_to_check = self.get_object()
+        is_registered = event_to_check.registered_users.filter(id=request.user.id).exists()
+        return Response({'is_registered': is_registered} )
 
     @action(detail=False)
     def attending(self, request):
@@ -88,12 +117,6 @@ class EventViewSet(viewsets.ModelViewSet):
         event_to_unfav.favourited_users.remove(request.user)
         event_to_unfav.save()
         return Response({'status': 'unfavourited event'})
-
-    @action(detail=True, methods=['get'])
-    def is_favourite(self, request, pk=None):
-        event_to_check = self.get_object()
-        is_favourite = event_to_check.favourited_users.filter(id=request.user.id).exists()
-        return Response({'is_favourite': is_favourite} )
 
     @action(detail=True, methods=['post'])
     def register(self, request, pk=None):

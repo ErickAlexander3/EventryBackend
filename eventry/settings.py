@@ -105,7 +105,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            "NAME": "erickvelasquez",
+            "NAME": "template1",
             "USER": "erickvelasquez",
             "PASSWORD": "",
             "HOST": "localhost",

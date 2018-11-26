@@ -23,3 +23,4 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     bio = models.CharField(max_length=1000, default="I'm a cool user for using Eventry... and I won't fail CPEN 321!")
     profile_pic = models.ImageField(upload_to=path_and_rename)
+    expo_push_token = models.CharField(max_length=1000, null=True)

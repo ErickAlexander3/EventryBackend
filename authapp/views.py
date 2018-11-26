@@ -55,9 +55,22 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return Response('no image uploaded',
                             status=status.HTTP_400_BAD_REQUEST)
 
+        pdb.set_trace()
+
         image_data = request.data.getlist("profile_pic")[0]
         user.user_profile.profile_pic = image_data
         user.user_profile.save()
         pdb.set_trace()
         return Response({'status': 'profile pic updated'})
+
+    @action(detail=False, methods=['post'])
+    def update_expo_token(self, request):
+        if "expo_push_token" not in request.data:
+            return Response('no token sent',
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user = self.request.user
+        user.user_profile.expo_push_token = request.data["expo_push_token"]
+        user.user_profile.save()
+        return Response({'status': 'expo token updated'})
 

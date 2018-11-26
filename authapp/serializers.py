@@ -29,6 +29,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     number_of_attending_events = serializers.IntegerField(source='events_attended.count', read_only=True)
     number_of_hosting_events = serializers.IntegerField(source='events_hosting.count', read_only=True)
     bio = serializers.ReadOnlyField(source='user_profile.bio')
+    expo_push_token = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -42,4 +43,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'bio',
             'number_of_attending_events',
             'number_of_hosting_events',
+            'expo_push_token'
         )
+
+    def get_expo_push_token(self, obj):
+        if self.context["request"].user.id == obj.id:
+            return obj.user_profile.expo_push_token
+        else:
+            return None

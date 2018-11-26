@@ -21,6 +21,10 @@ from django.db.models import Q
 
 from events.models import Event, EventImage
 
+from exponent_server_sdk import PushClient
+from exponent_server_sdk import PushMessage
+from exponent_server_sdk import PushServerError
+
 class EventViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -56,7 +60,6 @@ class EventViewSet(viewsets.ModelViewSet):
                 distance=Distance('event_point_location', ref_location)).order_by(
                 'distance')
 
-
         return queryset
 
     '''
@@ -65,6 +68,17 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def hosting(self, request):
+        '''
+        try:
+            response = PushClient().publish(
+                PushMessage(to='ExponentPushToken[QpMxvaENOXy_Qh40d_NglF]',
+                            body="Erick is seeing a list of events lcoally",
+                            data={}))
+        except PushServerError as exc:
+            pdb.set_trace()
+            raise
+        '''
+
         hosting_events = Event.objects.filter(host__id=request.user.pk)
         serializer = self.get_serializer(hosting_events, many=True)
         return Response(serializer.data)

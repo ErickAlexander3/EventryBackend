@@ -19,6 +19,8 @@ from datetime import datetime
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models import Q
 
+from events.models import Event, EventImage
+
 class EventViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -135,6 +137,22 @@ class EventViewSet(viewsets.ModelViewSet):
         event_to_unregister.registered_users.remove(request.user)
         event_to_unregister.save()
         return Response({'status': 'unregistered event'})
+
+    @action(detail=True, methods=['post'])
+    def add_image(self, request, pk=None):
+        event = self.get_object()
+
+        #if images added, do the bindings
+        if "event_media" not in request.data:
+            return Response('no image uploaded',
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        for image_data in request.data.getlist("event_media"):
+            eventImage = EventImage.objects.create(event=event)
+            eventImage.image.save(image_data.name, image_data)
+
+        return Response({'status': 'image uploaded'})
+
 
     @action(detail=False, methods=['post'])
     def checkin_qrcode(self, request):

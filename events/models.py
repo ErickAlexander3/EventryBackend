@@ -51,7 +51,6 @@ class Event(models.Model):
     event_end_time = models.DateTimeField('start date and time', null=True)
     event_price = models.DecimalField(max_digits=7, decimal_places=2, default='0.00', validators=[MinValueValidator(0.0)])
     room_id = models.CharField(max_length=150, null=True)
-    event_pic = models.ImageField(upload_to=path_and_rename, null=True)
 
 
     class Meta:

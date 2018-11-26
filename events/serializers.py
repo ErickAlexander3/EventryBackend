@@ -42,10 +42,9 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'room_id',
             'distance',
             'rank',
-            'event_pic'
         )
 
-
+    '''
     def create(self, validated_data):
         #create event
         event = Event.objects.create(**validated_data)
@@ -56,3 +55,4 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
                 eventImage = EventImage.objects.create(event=event)
                 eventImage.image.save(image_data.name, image_data)
         return event
+    '''

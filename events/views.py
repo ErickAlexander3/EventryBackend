@@ -1,14 +1,18 @@
-import json
 from events.serializers import EventSerializer
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.measure import D
+from django.contrib.gis.geos import Point
+
 from django.contrib.auth.models import User
 from events.models import Event
 
 import pdb
+import json
 
 class EventViewSet(viewsets.ModelViewSet):
     """
@@ -16,19 +20,34 @@ class EventViewSet(viewsets.ModelViewSet):
     `update` and `destroy` actions.
 
     """
-    queryset = Event.objects.all()
+    #queryset = Event.objects.all()
     serializer_class = EventSerializer
 
     def perform_create(self, serializer):
         serializer.save(host=self.request.user)
-        '''
-    def create(self, request, *args, **kwargs):
+
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+
+        return queryset
+
+        ref_location = Point(49.267941, -123.247360)
+            
+        new_queryset = queryset.filter(event_point_location__distance_lt=(ref_location, D(km=2000000000))).annotate(distance=Distance('event_point_location', ref_location)).order_by('distance')
+
         pdb.set_trace()
-        return super(EventViewSet, self).create(request, *args, **kwargs)
-        '''
+
+        return queryset
+
     '''
         Getters
     '''
+
+    '''
+        Override list view to include location-based search and string-based search
+    '''
+
     @action(detail=False)
     def hosting(self, request):
         hosting_events = Event.objects.filter(host__id=request.user.pk)
@@ -69,6 +88,12 @@ class EventViewSet(viewsets.ModelViewSet):
         event_to_unfav.favourited_users.remove(request.user)
         event_to_unfav.save()
         return Response({'status': 'unfavourited event'})
+
+    @action(detail=True, methods=['get'])
+    def is_favourite(self, request, pk=None):
+        event_to_check = self.get_object()
+        is_favourite = event_to_check.favourited_users.filter(id=request.user.id).exists()
+        return Response({'is_favourite': is_favourite} )
 
     @action(detail=True, methods=['post'])
     def register(self, request, pk=None):

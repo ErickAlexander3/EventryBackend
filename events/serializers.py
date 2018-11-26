@@ -11,8 +11,6 @@ class EventImageSerializer(serializers.ModelSerializer):
         model = EventImage
         fields = ('image',)
 
-    def create(self, validated_data):
-        pdb.set_trace()
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     host = serializers.ReadOnlyField(source='host.username')
     event_point_location = PointField(required=False)
@@ -21,6 +19,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     event_start_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     event_end_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ"])
     room_id = serializers.ReadOnlyField()
+    distance = serializers.ReadOnlyField()
 
     class Meta:
         model = Event
@@ -39,7 +38,8 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'event_end_time',
             'event_price',
             'event_media',
-            'room_id'
+            'room_id',
+            'distance'
         )
 
 

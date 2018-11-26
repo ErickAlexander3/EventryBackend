@@ -25,7 +25,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register(r'events', EventViewSet)
+router.register(r'events', EventViewSet, basename='event')
 #router.register(r'users', UserViewSet)
 
 urlpatterns = [
